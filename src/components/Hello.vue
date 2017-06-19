@@ -12,47 +12,13 @@
       </div>
     </div>-->
 
-    <!--<div  class="col-md-3">
-        <draggable class="list-group" element="ul" v-model="list" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false"> 
-          <transition-group type="transition" :name="'flip-list'">
-            <li class="list-group-item" v-for="element in list" :key="element.order"> 
-              <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click=" element.fixed=! element.fixed" aria-hidden="true"></i>
-              {{element.name}}
-              <span class="badge">{{element.order}}</span>
-            </li> 
-          </transition-group>
-      </draggable>
-    </div>-->
-
     <div class="col-md-3 col-md-3-height">
-      <draggable class="list-group" element="ul" v-model="list1" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false"> 
+      <draggable class="list-group" element="ul" v-model="list" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false"> 
           <transition-group type="transition" :name="'flip-list'">
-            <a class="list-group-item nyan" v-for="element in list1" :key="element.order"> 
+            <a class="list-group-item list-group-item-dash" v-for="element in list" :key="element.order"> 
               {{element.name}}
               <span class="badge">{{element.number}}</span>
             </a> 
-          </transition-group>
-      </draggable>
-    </div>
-
-     <div class="col-md-3 col-md-3-height">
-      <draggable element="span" v-model="list2" :options="dragOptions" :move="onMove"> 
-          <transition-group name="no" class="list-group" tag="ul">
-            <li class="list-group-item nyan" v-for="element in list2" :key="element.order"> 
-              {{element.name}}
-              <span class="badge">{{element.number}}</span>
-            </li> 
-          </transition-group>
-      </draggable>
-    </div>
-
-     <div class="col-md-3 col-md-3-height">
-      <draggable element="span" v-model="list3" :options="dragOptions" :move="onMove"> 
-          <transition-group name="no" class="list-group" tag="ul">
-            <li class="list-group-item nyan" v-for="element in list3" :key="element.order"> 
-              {{element.name}}
-              <span class="badge">{{element.number}}</span>
-            </li> 
           </transition-group>
       </draggable>
     </div>
@@ -62,12 +28,9 @@
 
 <script>
 import draggable from 'vuedraggable'
-// const message1 = [ 'vue.draggable', 'for', 'on']
-// const message2 = [ 'draggable', 'vue.js 2.0', 'Sortablejs' ]
-// const message3 = [ 'component', 'based']
 
 const message = [
-  'vue.draggable', 'draggable', 'component', 'for', 'vue.js 2.0', 'based', 'on', 'Sortablejs'
+  'vue.draggable', 'draggable', 'component', 'for', 'vue.js 2.0', 'based', 'on', 'Sortablejs',
 ]
 
 export default {
@@ -77,18 +40,9 @@ export default {
   },
   data () {
     return {
-      baseList: message.map((name, index) => {
+      list: message.map((name, index) => {
         return {name, order: index+1, fixed: false, number: index+1}
       }),
-      list1: message.map((name, index) => {
-        return {name, order: index+1, fixed: false, number: index+1}
-      }).filter((elem) => elem.order % 3 === 1),
-      list2: message.map((name, index) => {
-        return {name, order: index+1, fixed: false, number: index+1}
-      }).filter((elem) => elem.order % 3 === 2),
-      list3: message.map((name, index) => {
-        return {name, order: index+1, fixed: false, number: index+1}
-      }).filter((elem) => elem.order % 3 === 0),
       editable:true,
       isDragging: false,
       delayedDragging:false
@@ -100,20 +54,8 @@ export default {
       const draggedElement = draggedContext.element;
       if (relatedElement && relatedElement.fixed) return false;
 
-      this.sortItem(draggedElement, relatedElement)
       return true;
     },
-    sortItem (draggedElement, relatedElement) {
-      // const dropedOrder = relatedElement.order;
-      // const draggedOrder =draggedElement.order;
-
-      // this.baseList[dropOrder-1] = dr
-
-      // 上半分にドラッグされたのか下半分にドラッグされたのかが判定できないので駄目そう
-      // eventtargetがそのまま欲しかった
-      console.log(draggedElement, relatedElement)
-    },
-
     // orderList () {
     //   this.list = this.list.sort((one,two) =>{return one.order-two.order; })
     // },
@@ -171,11 +113,16 @@ export default {
   cursor: pointer;
 }
 
-.nyan {
+.list-group-item-dash {
   width: 250px;
   height: 250px;
-
+  margin: 10px;
 }
 
+.list-group>span{
+    display: flex;
+    width: 900px;
+    flex-wrap: wrap;
+}
 
 </style>
