@@ -13,7 +13,7 @@
     </div>-->
 
     <div class="col-md-3 col-md-3-height">
-      <draggable class="list-group" element="ul" v-model="list" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false"> 
+      <draggable class="list-group" element="ul" v-model="list" :options="dragOptions" @clone="onClone" :move="onMove" @start="onStart" @end="onEnd">
           <transition-group type="transition" :name="'flip-list'">
             <a class="list-group-item list-group-item-dash" v-for="element in list" :key="element.order"> 
               {{element.name}}
@@ -49,29 +49,36 @@ export default {
     }
   },
   methods:{
-    onMove ({relatedContext, draggedContext}) {
-      const relatedElement = relatedContext.element;
-      const draggedElement = draggedContext.element;
-      if (relatedElement && relatedElement.fixed) return false;
+    onStart (e) {
+      this.isDragging = true;
+    },
+    onEnd (e) {
+      this.isDragging = false;
+    },
+    onClone(e) {},
+    onMove (e) {
+      const relatedElement = e.relatedContext.element;
+      const draggedElement = e.draggedContext.element;
+      if (e.relatedElement && e.relatedElement.fixed) return false;
 
       return true;
-    },
-    // orderList () {
-    //   this.list = this.list.sort((one,two) =>{return one.order-two.order; })
-    // },
+    }
   },
   computed: {
     dragOptions () {
       return  {
         animation: 0,
-        group: 'description',
+        group: {
+          name: 'description',
+          pull: "clone",
+          revertClone: true
+        },
         disabled: !this.editable,
-        ghostClass: 'ghost'
+        ghostClass: 'ghost',
+        chosenClass: 'chosen',
+        dragClass: 'dragging'
       };
-    },
-    // list1: this.baseList.filter((elem) => {
-    //   return elem % 3 === 1;
-    // }),
+    }
   },
   watch: {
     isDragging (newValue) {
@@ -98,7 +105,20 @@ export default {
 
 .ghost {
   opacity: .5;
-  background: #C8EBFB;
+  /*width: 80%;
+  height: 80%;*/
+  /*background-color:red;*/
+}
+
+.chosen {
+  /*background-color:red;*/
+}
+
+.dragging {
+  opacity: .3;
+  /*width: 10px;*/
+  /*background: blue;*/
+  /*background-color:red;*/
 }
 
 .list-group {
@@ -121,7 +141,7 @@ export default {
 
 .list-group>span{
     display: flex;
-    width: 900px;
+    width: 1100px;
     flex-wrap: wrap;
 }
 
